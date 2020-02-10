@@ -12,6 +12,13 @@ class Admin(commands.Cog):
         await ctx.send("OPP..." + arg)
     
     @commands.is_owner()
+    @commands.command()
+    async def stop(self, ctx):
+        await ctx.send("Shutting down...")
+        quit()
+        return         
+    
+    @commands.is_owner()
     @commands.command(name = "setGame")
     #Use "Game Name Here" for game titles with spaces to be recognized
     async def setGame(self, ctx, arg):

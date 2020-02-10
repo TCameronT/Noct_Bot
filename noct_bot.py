@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 
+#Notes:
+#Bot Prefix is '!'
+#Cogs [or extensions] are named after the file's name, not the class name
+
 def getToken():
     with open('token', 'r') as tokenFile:
         tokenStr = tokenFile.read()
@@ -12,7 +16,7 @@ class Noctis:
     bot = discord.Client()
     bot = commands.Bot(command_prefix='!')
     bot.owner_id = 148987550072176641
-    extensions = ['noct_commands', 'admin']
+    extensions = ['noct_commands', 'admin', 'skribbl']
     loadedExts = set()
 
     def __init__(self):
@@ -43,14 +47,8 @@ class Noctis:
 
     @classmethod
     def run(self):
-        try:
-            self.bot.run(getToken())
-        except:
-            print("Invalid token. Please check './token' and ensure your bot's token is correct.")
-        
+        self.bot.run(getToken())        
 
-    def print():
-        print("Hello")
     #End Noctis
 
 Noct = Noctis.bot
@@ -61,14 +59,16 @@ async def on_ready():
     await Noct.change_presence(activity=discord.Game(name='FFVXIII'))
 
 @Noct.event
+async def on_message_delete(message):
+    print("A message was deleted!")
+    #print(message.content)
+    if(message.author.id == Noct.user.id):
+        await message.channel.send("That's my job.")
+
+@Noct.event
 async def on_message(message):
     user = Noct.get_user(message.author.id)
     if message.author == Noct.user:
-        return
-
-    if message.content.startswith(Noct.command_prefix + 'stop'):
-        print("Shutting down...")
-        quit()
         return
 
     await Noct.process_commands(message)
